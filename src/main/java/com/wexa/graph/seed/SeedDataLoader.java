@@ -16,6 +16,7 @@ public class SeedDataLoader {
 
         try (Driver driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
              var session = driver.session()) {
+            createConstraints(session);
             session.executeWrite(tx -> tx.run("MATCH (n) DETACH DELETE n").consume());
 
             session.executeWrite(tx -> tx.run("""
@@ -225,5 +226,27 @@ public class SeedDataLoader {
         String value = System.getenv(key);
         return value == null || value.isBlank() ? defaultValue : value;
     }
-}
 
+    private static void createConstraints(org.neo4j.driver.Session session) {
+        session.executeWrite(tx -> tx.run("""
+                CREATE CONSTRAINT person_id IF NOT EXISTS
+                FOR (p:Person)
+                REQUIRE p.id IS UNIQUE
+                """).consume());
+        session.executeWrite(tx -> tx.run("""
+                CREATE CONSTRAINT role_id IF NOT EXISTS
+                FOR (r:Role)
+                REQUIRE r.id IS UNIQUE
+                """).consume());
+        session.executeWrite(tx -> tx.run("""
+                CREATE CONSTRAINT skill_id IF NOT EXISTS
+                FOR (s:Skill)
+                REQUIRE s.id IS UNIQUE
+                """).consume());
+        session.executeWrite(tx -> tx.run("""
+                CREATE CONSTRAINT course_id IF NOT EXISTS
+                FOR (c:Course)
+                REQUIRE c.id IS UNIQUE
+                """).consume());
+    }
+}

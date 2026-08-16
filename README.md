@@ -109,11 +109,30 @@ All queries are parameterized via Neo4j driver maps (no string concatenation).
 }
 ```
 
+## What This Project Demonstrates
+
+Career Graph Navigator is built to show where graph databases win in real product scenarios:
+
+- **Relationship-first modeling** for role fit, learning paths, and mentor discovery.
+- **Traversal-heavy querying** with variable-length paths (`MENTORS*1..2`) that are awkward in relational systems.
+- **Clean engineering boundaries** across configuration, repository, service, and web layers.
+- **Production-minded behavior** with parameterized Cypher, environment-based secrets, and graceful database error responses.
+
+## UX Highlights
+
+- Guided input via person + target role selectors.
+- Clear result sections: missing skills, recommended courses, and nearby mentors.
+- Thoughtful states for loading, empty results, and user-facing errors.
+- Simple visual hierarchy for quick comprehension by non-technical users.
+
 ## Screenshots and Demo
 
-- Hosted demo link: `TODO`
-- Screen recording: `TODO`
-- UI screenshots: place image files in `docs/screenshots/` and link them here.
+- Hosted demo link: `ADD_YOUR_LINK`
+- Screen recording: `ADD_YOUR_LINK`
+- UI screenshots:
+  - `docs/screenshots/home.png`
+  - `docs/screenshots/analysis-result.png`
+  - `docs/screenshots/error-state.png`
 
 ## Build and Test
 

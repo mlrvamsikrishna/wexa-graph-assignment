@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: wexa-graph-assignment
+    env: java
+    plan: free
+    buildCommand: ./mvnw -DskipTests package
+    startCommand: java -jar target/wexa-graph-module-1.0.0.jar
+    envVars:
+      - key: COGNODB_URI
+        sync: false
+      - key: COGNODB_USER
+        value: cognodb
+      - key: COGNODB_PASSWORD
+        sync: false
+      - key: PORT
+        value: "10000"
+
