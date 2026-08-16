@@ -15,6 +15,7 @@ const mentorsListEl = document.getElementById("mentors-list");
 const skillsEmptyEl = document.getElementById("skills-empty");
 const coursesEmptyEl = document.getElementById("courses-empty");
 const mentorsEmptyEl = document.getElementById("mentors-empty");
+const exampleGridEl = document.getElementById("example-grid");
 
 async function loadCatalog() {
     clearStatus();
@@ -74,6 +75,19 @@ formEl.addEventListener("submit", async (event) => {
     } finally {
         setLoading(false);
     }
+});
+
+exampleGridEl.addEventListener("click", (event) => {
+    const button = event.target.closest(".example-pill");
+    if (!button) {
+        return;
+    }
+
+    personEl.value = button.dataset.person;
+    roleEl.value = button.dataset.role;
+    exampleGridEl.querySelectorAll(".example-pill").forEach((pill) => pill.classList.remove("selected"));
+    button.classList.add("selected");
+    showStatus(`Loaded example: ${button.textContent.trim()}. Click Analyze with Graph Traversal.`, "success");
 });
 
 function renderAnalysis(data) {

@@ -140,10 +140,6 @@ Start the web application:
 ./mvnw spring-boot:run
 ```
 
-Application URL:
-
-- `http://localhost:8081`
-
 ## Live Deployment
 
 - Hosted application: `https://wexa-graph-assignment.onrender.com/`
@@ -166,6 +162,9 @@ Example request:
 
 Once the app is running, open the UI and test a few scenarios:
 
+The page also includes a **Try These Examples** box so reviewers can click a pair and immediately run a strong scenario without guessing IDs.
+Each example card now includes a tiny caption explaining what the reviewer will see, which makes the demo feel more guided and polished.
+
 1. **Ava → Graph Data Engineer**
    - Good for seeing role-based skill gaps.
    - Typically shows missing skills, matching courses, and mentor suggestions.
@@ -179,6 +178,18 @@ Once the app is running, open the UI and test a few scenarios:
    - Helps demonstrate how the query logic changes with the chosen role.
 
 If a person already matches the role, the app intentionally keeps the result useful by showing role-aligned growth courses instead of an empty state.
+
+The seed dataset is intentionally balanced: some pairs produce visible skill gaps, some produce near-match results, and some trigger the mentor traversal most clearly. That mixture makes the submission feel more complete and prevents the UI from looking empty for every case.
+
+## What to Expect from Results
+
+- **Missing Skills** appears when the selected person does not yet satisfy every role requirement.
+- **Recommended Courses** appears in two useful modes:
+  - true gap-closing courses when there are missing skills,
+  - role-aligned growth courses when the person already matches the role.
+- **Mentors** appears when the seed graph contains a 1-2 hop mentorship path that is relevant to the remaining skill gap.
+
+Because the dataset is intentionally small and realistic, some combinations will be a near-match while others will show deeper gaps. That balance is deliberate: it demonstrates both the graph analysis and the fallback UX for exact matches.
 
 ## Main Queries Explained
 
@@ -263,3 +274,15 @@ It also applies unique constraints for primary node identifiers to improve consi
 - Environment-based secrets (`COGNODB_URI`, `COGNODB_USER`, `COGNODB_PASSWORD`) are required at runtime.
 - Database connectivity failures are handled with clear API error responses for user-facing resilience.
 - Server port is configurable via `PORT`, enabling deployment on managed platforms.
+
+## Why the dataset was tuned this way
+
+The seed graph is deliberately small enough to be reviewable, but rich enough to prove the query patterns:
+
+- a few people are close to their roles, so fallback growth courses can be shown,
+- a few people have obvious gaps, so the missing-skill logic is visible,
+- mentorship links create real 1-2 hop traversals,
+- course-to-skill mapping ensures the recommendations are not arbitrary.
+
+If the dataset were increased, the app would still work the same way, but the graph would become more useful for larger traversals and broader recommendation coverage. For this submission, the smaller but well-connected dataset is better because it keeps the demo fast and easy to understand.
+
