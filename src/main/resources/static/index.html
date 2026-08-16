@@ -40,6 +40,29 @@
         <div id="status" class="status hidden" role="status" aria-live="polite"></div>
     </section>
 
+    <section id="results" class="panel hidden">
+        <h2 id="result-title"></h2>
+        <p id="result-summary" class="section-subtitle"></p>
+
+        <div class="result-group card">
+            <h3>Missing Skills</h3>
+            <ul id="skills-list" class="unstyled-list"></ul>
+            <p id="skills-empty" class="state hidden">No missing skills. This person already matches the role.</p>
+        </div>
+
+        <div class="result-group card">
+            <h3>Recommended Courses</h3>
+            <ul id="courses-list" class="unstyled-list"></ul>
+            <p id="courses-empty" class="state hidden">No course recommendation required.</p>
+        </div>
+
+        <div class="result-group card">
+            <h3>Mentors Within 2 Hops</h3>
+            <ul id="mentors-list" class="unstyled-list"></ul>
+            <p id="mentors-empty" class="state hidden">No mentors found in 1-2 hops for the current gap.</p>
+        </div>
+    </section>
+
     <section class="panel">
         <h2>Try These Examples</h2>
         <p class="section-subtitle">Use these ready-made pairs to see the strongest graph patterns in action.</p>
@@ -66,29 +89,6 @@
             </button>
         </div>
         <p class="hint">Tip: click an example, then analyze to see missing skills, courses, and mentors.</p>
-    </section>
-
-    <section id="results" class="panel hidden">
-        <h2 id="result-title"></h2>
-        <p id="result-summary" class="section-subtitle"></p>
-
-        <div class="result-group card">
-            <h3>Missing Skills</h3>
-            <ul id="skills-list" class="unstyled-list"></ul>
-            <p id="skills-empty" class="state hidden">No missing skills. This person already matches the role.</p>
-        </div>
-
-        <div class="result-group card">
-            <h3>Recommended Courses</h3>
-            <ul id="courses-list" class="unstyled-list"></ul>
-            <p id="courses-empty" class="state hidden">No course recommendation required.</p>
-        </div>
-
-        <div class="result-group card">
-            <h3>Mentors Within 2 Hops</h3>
-            <ul id="mentors-list" class="unstyled-list"></ul>
-            <p id="mentors-empty" class="state hidden">No mentors found in 1-2 hops for the current gap.</p>
-        </div>
     </section>
 </main>
 

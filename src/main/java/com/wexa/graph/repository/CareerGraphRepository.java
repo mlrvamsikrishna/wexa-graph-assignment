@@ -74,7 +74,7 @@ public class CareerGraphRepository {
         String query = """
                 MATCH (p:Person {id: $personId}), (r:Role {id: $roleId})
                 MATCH (r)-[req:REQUIRES]->(s:Skill)
-                WHERE NOT EXISTS { MATCH (p)-[:HAS_SKILL]->(s) }
+                WHERE NOT (p)-[:HAS_SKILL]->(s)
                 RETURN s.id AS id, s.name AS name, req.importance AS importance
                 ORDER BY importance DESC, name ASC
                 """;
@@ -91,7 +91,7 @@ public class CareerGraphRepository {
         String query = """
                 MATCH (p:Person {id: $personId}), (r:Role {id: $roleId})
                 MATCH (r)-[:REQUIRES]->(s:Skill)
-                WHERE NOT EXISTS { MATCH (p)-[:HAS_SKILL]->(s) }
+                WHERE NOT (p)-[:HAS_SKILL]->(s)
                 MATCH (c:Course)-[:TEACHES]->(s)
                 RETURN c.id AS id,
                        c.title AS title,
@@ -135,7 +135,7 @@ public class CareerGraphRepository {
         String query = """
                 MATCH (target:Person {id: $personId})
                 MATCH (r:Role {id: $roleId})-[:REQUIRES]->(missing:Skill)
-                WHERE NOT EXISTS { MATCH (target)-[:HAS_SKILL]->(missing) }
+                WHERE NOT (target)-[:HAS_SKILL]->(missing)
                 WITH target, collect(DISTINCT missing) AS missingSkills
                 MATCH path = (target)-[:MENTORS*1..2]-(mentor:Person)
                 WHERE mentor.id <> target.id
