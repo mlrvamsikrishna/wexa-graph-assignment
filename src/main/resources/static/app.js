@@ -78,7 +78,9 @@ formEl.addEventListener("submit", async (event) => {
 
 function renderAnalysis(data) {
     titleEl.textContent = `${data.person.name} -> ${data.targetRole.title}`;
-    summaryEl.textContent = `${data.person.name} has ${data.missingSkills.length} identified gap(s) for ${data.targetRole.title}.`;
+    summaryEl.textContent = data.missingSkills.length === 0
+        ? `${data.person.name} already meets the target role. The course list below now shows role-aligned growth opportunities.`
+        : `${data.person.name} has ${data.missingSkills.length} identified gap(s) for ${data.targetRole.title}.`;
 
     skillsListEl.innerHTML = data.missingSkills
         .map((skill) => `<li><strong>${skill.name}</strong> <span class="state">importance: ${skill.importance}/5</span></li>`)
@@ -87,6 +89,10 @@ function renderAnalysis(data) {
     coursesListEl.innerHTML = data.courseRecommendations
         .map((course) => `<li><strong>${course.title}</strong><br><span class="state">Covers: ${course.coveredSkills.join(", ")}</span></li>`)
         .join("");
+
+    coursesEmptyEl.textContent = data.missingSkills.length === 0
+        ? "No gaps found — these are the most relevant courses to deepen role-aligned expertise."
+        : "No course recommendation required.";
 
     mentorsListEl.innerHTML = data.mentorRecommendations
         .map((mentor) => `<li><strong>${mentor.name}</strong><br><span class="state">Coverage: ${mentor.matchedSkills}/${mentor.totalMissingSkills} skills | Distance: ${mentor.hops} hop(s)</span></li>`)

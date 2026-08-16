@@ -26,6 +26,46 @@ A user selects a person and a target role. The system performs graph analysis to
 2. Course recommendations ranked by missing-skill coverage.
 3. Mentor recommendations ranked by path distance and skill overlap.
 
+## Relationships at a Glance
+
+This project is intentionally centered on relationship meaning, not just node labels:
+
+- **`WORKS_AS`** links a person to their current role.
+- **`HAS_SKILL`** captures the skills a person already has, along with a proficiency `level`.
+- **`REQUIRES`** describes what a role expects, with an `importance` score so the app can rank gaps.
+- **`TEACHES`** connects courses to the skills they build.
+- **`MENTORS`** creates a real traversal network between people, enabling 1-2 hop discovery.
+
+These relationships are what make the app useful: the analysis is driven by the network of connections, not by isolated rows.
+
+## Data Available in the Seed Dataset
+
+The repository includes realistic sample data loaded by `scripts/load-seed.sh`.
+
+### Node inventory
+
+- **8 people**: Ava, Noah, Olivia, Liam, Mia, Ethan, Emma, Lucas
+- **5 roles**: Backend Engineer, Frontend Engineer, ML Engineer, Graph Data Engineer, Solutions Architect
+- **10 skills**: Java, Spring Boot, SQL, Graph Modeling, Cypher, React, System Design, LLM Fundamentals, Data Structures, Python
+- **8 courses**: Java, Spring, graph modeling, Cypher, React, LLM, design, and Python learning paths
+
+### Relationship network
+
+- People already working in roles through `WORKS_AS`
+- People connected to skills through `HAS_SKILL`
+- Roles connected to required skills through `REQUIRES`
+- Courses connected to teachable skills through `TEACHES`
+- People connected to mentors through `MENTORS`, including multi-hop paths for traversal demos
+
+### Good demo pairs to try
+
+- `Ava -> Graph Data Engineer`
+- `Noah -> Backend Engineer`
+- `Olivia -> Solutions Architect`
+- `Liam -> Backend Engineer`
+- `Mia -> Graph Data Engineer`
+- `Lucas -> Solutions Architect`
+
 ## Data Model
 
 ```mermaid
@@ -121,6 +161,24 @@ Example request:
   "roleId": "role_graph"
 }
 ```
+
+## Try It Out
+
+Once the app is running, open the UI and test a few scenarios:
+
+1. **Ava → Graph Data Engineer**
+   - Good for seeing role-based skill gaps.
+   - Typically shows missing skills, matching courses, and mentor suggestions.
+
+2. **Liam → Backend Engineer**
+   - Strong graph/cypher background makes the gap analysis easy to inspect.
+   - Useful for checking course ranking and mentor coverage.
+
+3. **Noah → Backend Engineer**
+   - A good example for comparing current skills to a different role profile.
+   - Helps demonstrate how the query logic changes with the chosen role.
+
+If a person already matches the role, the app intentionally keeps the result useful by showing role-aligned growth courses instead of an empty state.
 
 ## Main Queries Explained
 
