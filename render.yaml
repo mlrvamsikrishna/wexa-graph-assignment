@@ -1,10 +1,10 @@
 services:
   - type: web
     name: wexa-graph-assignment
-    env: java
+    env: docker
     plan: free
-    buildCommand: ./mvnw -DskipTests package
-    startCommand: java -jar target/wexa-graph-module-1.0.0.jar
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
       - key: COGNODB_URI
         sync: false
@@ -14,4 +14,5 @@ services:
         sync: false
       - key: PORT
         value: "10000"
+
 
