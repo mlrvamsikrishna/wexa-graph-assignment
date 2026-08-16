@@ -189,6 +189,8 @@ The seed dataset is intentionally balanced: some pairs produce visible skill gap
   - role-aligned growth courses when the person already matches the role.
 - **Mentors** appears when the seed graph contains a 1-2 hop mentorship path that is relevant to the remaining skill gap.
 
+When no skill gap exists, mentor recommendations switch to a role-aligned mode so the section still suggests nearby people with strong overlap in the target role skill set.
+
 The backend now derives mentor recommendations from the same missing-skill set used in the gap section, so the UI stays logically consistent across all result cards.
 
 Because the dataset is intentionally small and realistic, some combinations will be a near-match while others will show deeper gaps. That balance is deliberate: it demonstrates both the graph analysis and the fallback UX for exact matches.
@@ -287,4 +289,6 @@ The seed graph is deliberately small enough to be reviewable, but rich enough to
 - course-to-skill mapping ensures the recommendations are not arbitrary.
 
 If the dataset were increased, the app would still work the same way, but the graph would become more useful for larger traversals and broader recommendation coverage. For this submission, the smaller but well-connected dataset is better because it keeps the demo fast and easy to understand.
+
+After pulling updates that change seed data or recommendation logic, run the seed script again so your database reflects the latest demo behavior.
 

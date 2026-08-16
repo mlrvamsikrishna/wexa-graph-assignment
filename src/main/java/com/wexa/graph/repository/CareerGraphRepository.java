@@ -203,6 +203,39 @@ public class CareerGraphRepository {
         );
     }
 
+    public List<MentorRecommendation> findRoleAlignedMentors(String personId, String roleId) {
+        String query = """
+                MATCH (target:Person {id: $personId})
+                MATCH (r:Role {id: $roleId})-[:REQUIRES]->(required:Skill)
+                WITH target, collect(DISTINCT required) AS roleSkills
+                MATCH path = (target)-[:MENTORS*1..2]-(mentor:Person)
+                WHERE mentor.id <> target.id
+                WITH mentor, roleSkills, min(length(path)) AS hops
+                MATCH (mentor)-[:HAS_SKILL]->(s:Skill)
+                WHERE s IN roleSkills
+                WITH mentor, hops, count(DISTINCT s) AS matchedSkills, size(roleSkills) AS totalRoleSkills
+                WHERE totalRoleSkills > 0
+                RETURN mentor.id AS id,
+                       mentor.name AS name,
+                       hops,
+                       matchedSkills,
+                       totalRoleSkills AS totalMissingSkills,
+                       toFloat(matchedSkills) / totalRoleSkills AS coverage
+                ORDER BY coverage DESC, hops ASC, name ASC
+                LIMIT 5
+                """;
+
+        return runRead(query, Map.of("personId", personId, "roleId", roleId), record ->
+                new MentorRecommendation(
+                        record.get("id").asString(),
+                        record.get("name").asString(),
+                        record.get("hops").asLong(),
+                        record.get("matchedSkills").asLong(),
+                        record.get("totalMissingSkills").asLong(),
+                        record.get("coverage").asDouble())
+        );
+    }
+
     private <T> List<T> runRead(String query, Map<String, Object> params, Mapper<T> mapper) {
         try (var session = driver.session()) {
             return session.executeRead(tx -> tx.run(query, params).list(record -> mapper.map(record)));

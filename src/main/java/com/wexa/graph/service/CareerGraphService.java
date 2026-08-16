@@ -27,7 +27,9 @@ public class CareerGraphService {
                 ? repository.findRoleAlignedCourses(roleId)
                 : repository.findCourseRecommendations(personId, roleId);
 
-        var mentorRecommendations = repository.findMentorRecommendationsForMissingSkills(personId, missingSkillIds);
+        var mentorRecommendations = missingSkills.isEmpty()
+                ? repository.findRoleAlignedMentors(personId, roleId)
+                : repository.findMentorRecommendationsForMissingSkills(personId, missingSkillIds);
 
         return new CareerGapAnalysis(
                 person,

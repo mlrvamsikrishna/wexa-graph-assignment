@@ -109,6 +109,10 @@ function renderAnalysis(data) {
         ? "No gaps found — these are the most relevant courses to deepen role-aligned expertise."
         : "No course recommendation required.";
 
+    mentorsEmptyEl.textContent = data.missingSkills.length === 0
+        ? "No nearby mentors found for role-aligned growth within 1-2 hops."
+        : "No mentors found in 1-2 hops for the current gap.";
+
     mentorsListEl.innerHTML = data.mentorRecommendations
         .map((mentor) => `<li><strong>${mentor.name}</strong><br><span class="state">Coverage: ${mentor.matchedSkills}/${mentor.totalMissingSkills} skills | Distance: ${mentor.hops} hop(s)</span></li>`)
         .join("");
