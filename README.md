@@ -163,7 +163,7 @@ Example request:
 Once the app is running, open the UI and test a few scenarios:
 
 The page also includes a **Try These Examples** box so reviewers can click a pair and immediately run a strong scenario without guessing IDs.
-Each example card now includes a tiny caption explaining what the reviewer will see, which makes the demo feel more guided and polished.
+Each example card includes a tiny caption and **expected outcome badges** (`Skills`, `Courses`, `Mentors`) so the reviewer immediately knows what should appear.
 
 1. **Ava → Graph Data Engineer**
    - Good for seeing role-based skill gaps.
@@ -188,6 +188,8 @@ The seed dataset is intentionally balanced: some pairs produce visible skill gap
   - true gap-closing courses when there are missing skills,
   - role-aligned growth courses when the person already matches the role.
 - **Mentors** appears when the seed graph contains a 1-2 hop mentorship path that is relevant to the remaining skill gap.
+
+The backend now derives mentor recommendations from the same missing-skill set used in the gap section, so the UI stays logically consistent across all result cards.
 
 Because the dataset is intentionally small and realistic, some combinations will be a near-match while others will show deeper gaps. That balance is deliberate: it demonstrates both the graph analysis and the fallback UX for exact matches.
 

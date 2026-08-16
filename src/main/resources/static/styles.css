@@ -201,6 +201,25 @@ button:disabled {
     color: var(--muted);
 }
 
+.badge-row {
+    display: flex;
+    gap: 0.35rem;
+    margin-top: 0.7rem;
+    flex-wrap: wrap;
+}
+
+.outcome-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.28rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid #bfd3ff;
+    background: #ffffff;
+    color: #1e40af;
+}
+
 .example-pill:focus-visible,
 button:focus-visible,
 select:focus-visible {

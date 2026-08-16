@@ -27,7 +27,7 @@ class CareerGraphServiceTest {
                 .thenReturn(List.of(new MissingSkill("skill_cypher", "Cypher", 5)));
         when(repository.findCourseRecommendations("person_ava", "role_graph"))
                 .thenReturn(List.of(new CourseRecommendation("course_cypher", "Cypher Query Masterclass", List.of("Cypher"), 1)));
-        when(repository.findMentorRecommendations("person_ava", "role_graph"))
+        when(repository.findMentorRecommendationsForMissingSkills("person_ava", List.of("skill_cypher")))
                 .thenReturn(List.of(new MentorRecommendation("person_liam", "Liam", 2, 1, 2, 0.5)));
 
         var result = service.analyze("person_ava", "role_graph");

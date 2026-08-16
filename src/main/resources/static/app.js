@@ -87,7 +87,8 @@ exampleGridEl.addEventListener("click", (event) => {
     roleEl.value = button.dataset.role;
     exampleGridEl.querySelectorAll(".example-pill").forEach((pill) => pill.classList.remove("selected"));
     button.classList.add("selected");
-    showStatus(`Loaded example: ${button.textContent.trim()}. Click Analyze with Graph Traversal.`, "success");
+    const title = button.querySelector(".example-title")?.textContent?.trim() || "scenario";
+    showStatus(`Loaded example: ${title}. Click Analyze with Graph Traversal.`, "success");
 });
 
 function renderAnalysis(data) {

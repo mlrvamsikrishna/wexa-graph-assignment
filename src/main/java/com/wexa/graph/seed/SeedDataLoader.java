@@ -137,6 +137,7 @@ public class SeedDataLoader {
                 Map.of("roleId", "role_backend", "skillId", "skill_design", "importance", 3),
                 Map.of("roleId", "role_frontend", "skillId", "skill_react", "importance", 5),
                 Map.of("roleId", "role_frontend", "skillId", "skill_ds", "importance", 3),
+                Map.of("roleId", "role_frontend", "skillId", "skill_design", "importance", 4),
                 Map.of("roleId", "role_ml", "skillId", "skill_python", "importance", 5),
                 Map.of("roleId", "role_ml", "skillId", "skill_llm", "importance", 5),
                 Map.of("roleId", "role_ml", "skillId", "skill_ds", "importance", 4),

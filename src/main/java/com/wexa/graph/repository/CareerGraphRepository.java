@@ -110,6 +110,27 @@ public class CareerGraphRepository {
         );
     }
 
+    public List<CourseRecommendation> findRoleAlignedCourses(String roleId) {
+        String query = """
+                MATCH (r:Role {id: $roleId})-[:REQUIRES]->(s:Skill)
+                MATCH (c:Course)-[:TEACHES]->(s)
+                RETURN c.id AS id,
+                       c.title AS title,
+                       collect(DISTINCT s.name) AS coveredSkills,
+                       count(DISTINCT s) AS coverageCount
+                ORDER BY coverageCount DESC, title ASC
+                LIMIT 8
+                """;
+
+        return runRead(query, Map.of("roleId", roleId), record ->
+                new CourseRecommendation(
+                        record.get("id").asString(),
+                        record.get("title").asString(),
+                        record.get("coveredSkills").asList(value -> value.asString()),
+                        record.get("coverageCount").asLong())
+        );
+    }
+
     public List<MentorRecommendation> findMentorRecommendations(String personId, String roleId) {
         String query = """
                 MATCH (target:Person {id: $personId})
@@ -134,6 +155,44 @@ public class CareerGraphRepository {
                 """;
 
         return runRead(query, Map.of("personId", personId, "roleId", roleId), record ->
+                new MentorRecommendation(
+                        record.get("id").asString(),
+                        record.get("name").asString(),
+                        record.get("hops").asLong(),
+                        record.get("matchedSkills").asLong(),
+                        record.get("totalMissingSkills").asLong(),
+                        record.get("coverage").asDouble())
+        );
+    }
+
+    public List<MentorRecommendation> findMentorRecommendationsForMissingSkills(String personId, List<String> missingSkillIds) {
+        if (missingSkillIds.isEmpty()) {
+            return List.of();
+        }
+
+        String query = """
+                MATCH (target:Person {id: $personId})
+                UNWIND $missingSkillIds AS skillId
+                MATCH (missing:Skill {id: skillId})
+                WITH target, collect(DISTINCT missing) AS missingSkills
+                MATCH path = (target)-[:MENTORS*1..2]-(mentor:Person)
+                WHERE mentor.id <> target.id
+                WITH mentor, missingSkills, min(length(path)) AS hops
+                MATCH (mentor)-[:HAS_SKILL]->(s:Skill)
+                WHERE s IN missingSkills
+                WITH mentor, hops, count(DISTINCT s) AS matchedSkills, size(missingSkills) AS totalMissingSkills
+                WHERE totalMissingSkills > 0
+                RETURN mentor.id AS id,
+                       mentor.name AS name,
+                       hops,
+                       matchedSkills,
+                       totalMissingSkills,
+                       toFloat(matchedSkills) / totalMissingSkills AS coverage
+                ORDER BY coverage DESC, hops ASC, name ASC
+                LIMIT 5
+                """;
+
+        return runRead(query, Map.of("personId", personId, "missingSkillIds", missingSkillIds), record ->
                 new MentorRecommendation(
                         record.get("id").asString(),
                         record.get("name").asString(),

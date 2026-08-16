@@ -20,13 +20,21 @@ public class CareerGraphService {
     public CareerGapAnalysis analyze(String personId, String roleId) {
         var person = repository.findPerson(personId);
         var role = repository.findRole(roleId);
+        var missingSkills = repository.findMissingSkills(personId, roleId);
+        var missingSkillIds = missingSkills.stream().map(skill -> skill.id()).toList();
+
+        var courseRecommendations = missingSkills.isEmpty()
+                ? repository.findRoleAlignedCourses(roleId)
+                : repository.findCourseRecommendations(personId, roleId);
+
+        var mentorRecommendations = repository.findMentorRecommendationsForMissingSkills(personId, missingSkillIds);
 
         return new CareerGapAnalysis(
                 person,
                 role,
-                repository.findMissingSkills(personId, roleId),
-                repository.findCourseRecommendations(personId, roleId),
-                repository.findMentorRecommendations(personId, roleId)
+                missingSkills,
+                courseRecommendations,
+                mentorRecommendations
         );
     }
 }
