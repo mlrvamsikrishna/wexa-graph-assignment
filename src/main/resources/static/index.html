@@ -8,42 +8,57 @@
 </head>
 <body>
 <main class="container">
-    <h1>Career Graph Navigator</h1>
-    <p class="subtitle">Explore skill gaps, learning paths, and nearby mentors using graph traversals.</p>
+    <header class="hero panel">
+        <div>
+            <p class="eyebrow">WEXA Graph Intelligence Demo</p>
+            <h1>Career Graph Navigator</h1>
+            <p class="subtitle">Explore skill gaps, learning paths, and nearby mentors using graph traversals.</p>
+        </div>
+        <div class="chip-row">
+            <span class="chip" id="people-count">People: --</span>
+            <span class="chip" id="roles-count">Roles: --</span>
+            <span class="chip">Traversal: 1-2 hops</span>
+        </div>
+    </header>
 
     <section class="panel">
         <h2>Analyze Career Move</h2>
+        <p class="section-subtitle">Choose a person and target role to generate graph-native recommendations.</p>
         <form id="analysis-form">
-            <label for="person">Person</label>
-            <select id="person" required></select>
+            <div>
+                <label for="person">Person</label>
+                <select id="person" required></select>
+            </div>
 
-            <label for="role">Target Role</label>
-            <select id="role" required></select>
+            <div>
+                <label for="role">Target Role</label>
+                <select id="role" required></select>
+            </div>
 
-            <button type="submit">Analyze</button>
+            <button id="analyze-btn" type="submit">Analyze with Graph Traversal</button>
         </form>
-        <p id="loading" class="state hidden">Loading...</p>
-        <p id="error" class="state error hidden"></p>
+        <div id="status" class="status hidden" role="status" aria-live="polite"></div>
     </section>
 
     <section id="results" class="panel hidden">
         <h2 id="result-title"></h2>
+        <p id="result-summary" class="section-subtitle"></p>
 
-        <div class="result-group">
+        <div class="result-group card">
             <h3>Missing Skills</h3>
-            <ul id="skills-list"></ul>
+            <ul id="skills-list" class="unstyled-list"></ul>
             <p id="skills-empty" class="state hidden">No missing skills. This person already matches the role.</p>
         </div>
 
-        <div class="result-group">
+        <div class="result-group card">
             <h3>Recommended Courses</h3>
-            <ul id="courses-list"></ul>
+            <ul id="courses-list" class="unstyled-list"></ul>
             <p id="courses-empty" class="state hidden">No course recommendation required.</p>
         </div>
 
-        <div class="result-group">
+        <div class="result-group card">
             <h3>Mentors Within 2 Hops</h3>
-            <ul id="mentors-list"></ul>
+            <ul id="mentors-list" class="unstyled-list"></ul>
             <p id="mentors-empty" class="state hidden">No mentors found in 1-2 hops for the current gap.</p>
         </div>
     </section>

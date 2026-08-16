@@ -1,10 +1,13 @@
 const personEl = document.getElementById("person");
 const roleEl = document.getElementById("role");
 const formEl = document.getElementById("analysis-form");
-const loadingEl = document.getElementById("loading");
-const errorEl = document.getElementById("error");
+const statusEl = document.getElementById("status");
+const analyzeBtnEl = document.getElementById("analyze-btn");
 const resultsEl = document.getElementById("results");
 const titleEl = document.getElementById("result-title");
+const summaryEl = document.getElementById("result-summary");
+const peopleCountEl = document.getElementById("people-count");
+const rolesCountEl = document.getElementById("roles-count");
 
 const skillsListEl = document.getElementById("skills-list");
 const coursesListEl = document.getElementById("courses-list");
@@ -14,8 +17,8 @@ const coursesEmptyEl = document.getElementById("courses-empty");
 const mentorsEmptyEl = document.getElementById("mentors-empty");
 
 async function loadCatalog() {
-    setLoading(true);
-    clearError();
+    clearStatus();
+    setLoading(true, "Loading people and roles from the graph...");
 
     try {
         const res = await fetch("/api/catalog");
@@ -31,8 +34,12 @@ async function loadCatalog() {
         roleEl.innerHTML = data.roles
             .map((role) => `<option value="${role.id}">${role.title}</option>`)
             .join("");
+
+        peopleCountEl.textContent = `People: ${data.people.length}`;
+        rolesCountEl.textContent = `Roles: ${data.roles.length}`;
+        showStatus("Catalog loaded. Select inputs and run analysis.", "success");
     } catch (e) {
-        showError(e.message);
+        showStatus(e.message, "error");
     } finally {
         setLoading(false);
     }
@@ -40,8 +47,8 @@ async function loadCatalog() {
 
 formEl.addEventListener("submit", async (event) => {
     event.preventDefault();
-    setLoading(true);
-    clearError();
+    clearStatus();
+    setLoading(true, "Running graph analysis...");
 
     try {
         const res = await fetch("/api/analysis", {
@@ -60,9 +67,10 @@ formEl.addEventListener("submit", async (event) => {
         }
 
         renderAnalysis(payload);
+        showStatus("Analysis completed successfully.", "success");
     } catch (e) {
         resultsEl.classList.add("hidden");
-        showError(e.message);
+        showStatus(e.message, "error");
     } finally {
         setLoading(false);
     }
@@ -70,17 +78,18 @@ formEl.addEventListener("submit", async (event) => {
 
 function renderAnalysis(data) {
     titleEl.textContent = `${data.person.name} -> ${data.targetRole.title}`;
+    summaryEl.textContent = `${data.person.name} has ${data.missingSkills.length} identified gap(s) for ${data.targetRole.title}.`;
 
     skillsListEl.innerHTML = data.missingSkills
-        .map((skill) => `<li>${skill.name} (importance: ${skill.importance})</li>`)
+        .map((skill) => `<li><strong>${skill.name}</strong> <span class="state">importance: ${skill.importance}/5</span></li>`)
         .join("");
 
     coursesListEl.innerHTML = data.courseRecommendations
-        .map((course) => `<li><strong>${course.title}</strong> - covers: ${course.coveredSkills.join(", ")}</li>`)
+        .map((course) => `<li><strong>${course.title}</strong><br><span class="state">Covers: ${course.coveredSkills.join(", ")}</span></li>`)
         .join("");
 
     mentorsListEl.innerHTML = data.mentorRecommendations
-        .map((mentor) => `<li>${mentor.name} - ${mentor.matchedSkills}/${mentor.totalMissingSkills} skills, ${mentor.hops} hop(s)</li>`)
+        .map((mentor) => `<li><strong>${mentor.name}</strong><br><span class="state">Coverage: ${mentor.matchedSkills}/${mentor.totalMissingSkills} skills | Distance: ${mentor.hops} hop(s)</span></li>`)
         .join("");
 
     toggleEmptyState(skillsEmptyEl, data.missingSkills.length === 0);
@@ -94,18 +103,24 @@ function toggleEmptyState(element, visible) {
     element.classList.toggle("hidden", !visible);
 }
 
-function setLoading(isLoading) {
-    loadingEl.classList.toggle("hidden", !isLoading);
+function setLoading(isLoading, message = "") {
+    analyzeBtnEl.disabled = isLoading;
+    analyzeBtnEl.textContent = isLoading ? "Analyzing..." : "Analyze with Graph Traversal";
+    personEl.disabled = isLoading;
+    roleEl.disabled = isLoading;
+    if (isLoading) {
+        showStatus(message || "Loading...", "loading");
+    }
 }
 
-function showError(message) {
-    errorEl.textContent = message;
-    errorEl.classList.remove("hidden");
+function showStatus(message, type) {
+    statusEl.textContent = message;
+    statusEl.className = `status ${type}`;
 }
 
-function clearError() {
-    errorEl.textContent = "";
-    errorEl.classList.add("hidden");
+function clearStatus() {
+    statusEl.textContent = "";
+    statusEl.className = "status hidden";
 }
 
 loadCatalog();
