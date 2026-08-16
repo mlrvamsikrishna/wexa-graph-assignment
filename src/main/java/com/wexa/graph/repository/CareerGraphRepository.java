@@ -73,8 +73,10 @@ public class CareerGraphRepository {
     public List<MissingSkill> findMissingSkills(String personId, String roleId) {
         String query = """
                 MATCH (p:Person {id: $personId}), (r:Role {id: $roleId})
+                OPTIONAL MATCH (p)-[:HAS_SKILL]->(owned:Skill)
+                WITH r, collect(DISTINCT owned.id) AS ownedSkillIds
                 MATCH (r)-[req:REQUIRES]->(s:Skill)
-                WHERE NOT (p)-[:HAS_SKILL]->(s)
+                WHERE NOT s.id IN ownedSkillIds
                 RETURN s.id AS id, s.name AS name, req.importance AS importance
                 ORDER BY importance DESC, name ASC
                 """;
@@ -90,8 +92,10 @@ public class CareerGraphRepository {
     public List<CourseRecommendation> findCourseRecommendations(String personId, String roleId) {
         String query = """
                 MATCH (p:Person {id: $personId}), (r:Role {id: $roleId})
+                OPTIONAL MATCH (p)-[:HAS_SKILL]->(owned:Skill)
+                WITH p, r, collect(DISTINCT owned.id) AS ownedSkillIds
                 MATCH (r)-[:REQUIRES]->(s:Skill)
-                WHERE NOT (p)-[:HAS_SKILL]->(s)
+                WHERE NOT s.id IN ownedSkillIds
                 MATCH (c:Course)-[:TEACHES]->(s)
                 RETURN c.id AS id,
                        c.title AS title,
