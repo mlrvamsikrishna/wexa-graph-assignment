@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Graph Navigator</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main class="container">
+    <h1>Career Graph Navigator</h1>
+    <p class="subtitle">Explore skill gaps, learning paths, and nearby mentors using graph traversals.</p>
+
+    <section class="panel">
+        <h2>Analyze Career Move</h2>
+        <form id="analysis-form">
+            <label for="person">Person</label>
+            <select id="person" required></select>
+
+            <label for="role">Target Role</label>
+            <select id="role" required></select>
+
+            <button type="submit">Analyze</button>
+        </form>
+        <p id="loading" class="state hidden">Loading...</p>
+        <p id="error" class="state error hidden"></p>
+    </section>
+
+    <section id="results" class="panel hidden">
+        <h2 id="result-title"></h2>
+
+        <div class="result-group">
+            <h3>Missing Skills</h3>
+            <ul id="skills-list"></ul>
+            <p id="skills-empty" class="state hidden">No missing skills. This person already matches the role.</p>
+        </div>
+
+        <div class="result-group">
+            <h3>Recommended Courses</h3>
+            <ul id="courses-list"></ul>
+            <p id="courses-empty" class="state hidden">No course recommendation required.</p>
+        </div>
+
+        <div class="result-group">
+            <h3>Mentors Within 2 Hops</h3>
+            <ul id="mentors-list"></ul>
+            <p id="mentors-empty" class="state hidden">No mentors found in 1-2 hops for the current gap.</p>
+        </div>
+    </section>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>
